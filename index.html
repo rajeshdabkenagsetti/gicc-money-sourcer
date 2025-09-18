@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Money Guide & EMI Calculator</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --accent: #f72585;
+      --success: #4cc9f0;
+      --warning: #ffbe0b;
+      --danger: #ff6b6b;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #adb5bd;
+      --border-radius: 50px;
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7ec 100%);
+      color: var(--dark);
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+    
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+    
+    h2 {
+      margin: 25px 0 15px;
+      color: var(--primary-dark);
+      font-weight: 600;
+      text-align: left;
+      padding-left: 10px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .progress-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: var(--border-radius);
+      margin: 20px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-bar {
+      height: 10px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: var(--border-radius);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    
+    .progress-text {
+      position: absolute;
+      top: -25px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: var(--dark);
+      font-weight: 500;
+    }
+    
+    .section {
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+    
+    .pill-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 26px;
+      border-radius: var(--border-radius);
+      border: 2px solid var(--primary);
+      background: #fff;
+      color: var(--primary);
+      margin: 5px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 16px;
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .pill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: -1;
+    }
+    
+    .pill:hover {
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 7px 14px rgba(67, 97, 238, 0.3);
+    }
+    
+    .pill:hover::before {
+      width: 100%;
+    }
+    
+    .pill.selected {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 7px 14px rgba(67, 97, 238, 0.3);
+    }
+    
+    .pill.selected::after {
+      content: '✓';
+      margin-left: 8px;
+      font-weight: bold;
+    }
+    
+    button {
+      margin: 25px 0;
+      padding: 16px 35px;
+      border-radius: var(--border-radius);
+      border: none;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 7px 14px rgba(67, 97, 238, 0.3);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: all 0.7s ease;
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.4);
+    }
+    
+    button:hover::before {
+      left: 100%;
+    }
+    
+    button:active {
+      transform: translateY(1px);
+    }
+    
+    .result, .emi-result {
+      margin: 25px auto;
+      padding: 25px;
+      border-radius: 16px;
+      background: #fff;
+      max-width: 600px;
+      text-align: left;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      border-left: 5px solid var(--primary);
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .result h3, .emi-result h3 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .result h3::before, .emi-result h3::before {
+      content: '💡';
+      margin-right: 10px;
+    }
+    
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    input, select {
+      padding: 15px 20px;
+      border-radius: var(--border-radius);
+      border: 2px solid #e2e8f0;
+      width: 100%;
+      max-width: 250px;
+      font-size: 16px;
+      transition: var(--transition);
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    .offline-status {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      border-radius: var(--border-radius);
+      background: var(--gray);
+      color: white;
+      font-size: 14px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+    
+    .offline-status.offline {
+      background: var(--accent);
+      display: block;
+      animation: pulse 2s infinite;
+    }
+    
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+    
+    footer {
+      margin-top: 40px;
+      padding: 20px;
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .tab {
+      padding: 12px 24px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: var(--transition);
+      font-weight: 600;
+    }
+    
+    .tab.active {
+      border-bottom: 3px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    
+    .comparison-table th, .comparison-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .comparison-table th {
+      background-color: #f8f9fa;
+    }
+    
+    .comparison-table tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .wizard-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    
+    .wizard-step {
+      display: none;
+    }
+    
+    .wizard-step.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .error-message {
+      color: var(--danger);
+      margin-top: 5px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .print-button {
+      background: var(--gray);
+      margin-left: 10px;
+      padding: 8px 15px;
+      font-size: 14px;
+    }
+    
+    .save-button {
+      background: var(--success);
+      margin-left: 10px;
+      padding: 8px 15px;
+      font-size: 14px;
+    }
+    
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      margin-left: 5px;
+      cursor: help;
+    }
+    
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--dark);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 14px;
+      font-weight: normal;
+    }
+    
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      background: var(--success);
+      color: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: none;
+      animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+    }
+    
+    .notification.error {
+      background: var(--danger);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(247, 37, 133, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0); }
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .section {
+        padding: 20px 15px;
+      }
+      
+      .pill {
+        padding: 12px 20px;
+        font-size: 15px;
+        flex: 1 0 calc(50% - 20px);
+        max-width: calc(50% - 20px);
+      }
+      
+      input, select {
+        max-width: 100%;
+      }
+      
+      .tabs {
+        flex-direction: column;
+      }
+      
+      .tab {
+        margin-bottom: 5px;
+      }
+      
+      .comparison-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .pill {
+        flex: 1 0 100%;
+        max-width: 100%;
+      }
+      
+      .input-group {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+  <!-- Chart.js for EMI visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>💰 Smart Money Guide</h1>
+      <p>Find the best funding options based on your financial profile</p>
+    </header>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="guide">Money Guide</div>
+      <div class="tab" data-tab="calculator">EMI Calculator</div>
+      <div class="tab" data-tab="comparison">Loan Comparison</div>
+      <div class="tab" data-tab="resources">Resources</div>
+    </div>
+
+    <div class="tab-content active" id="guide">
+      <div class="section">
+        <div class="progress-container">
+          <div class="progress-text" id="progressText">0% Complete</div>
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="wizard-step active" data-step="1">
+          <h2>1. What do you need money for? <span class="tooltip">ℹ️<span class="tooltiptext">Select the primary purpose for your loan</span></span></h2>
+          <div class="pill-container" id="purpose">
+            <div class="pill" data-value="emergency">Emergency</div>
+            <div class="pill" data-value="education">Education</div>
+            <div class="pill" data-value="business">Business</div>
+            <div class="pill" data-value="home">Home</div>
+            <div class="pill" data-value="vehicle">Vehicle</div>
+            <div class="pill" data-value="debt">Debt Consolidation</div>
+            <div class="pill" data-value="wedding">Wedding</div>
+            <div class="pill" data-value="travel">Travel</div>
+            <div class="pill" data-value="medical">Medical</div>
+            <div class="pill" data-value="other">Other</div>
+          </div>
+          <div class="error-message" id="purpose-error">Please select a purpose</div>
+        </div>
+
+        <div class="wizard-step" data-step="2">
+          <h2>2. How much money do you need? (₹)</h2>
+          <div class="pill-container" id="amount">
+            <div class="pill" data-value="5000">Under 5,000</div>
+            <div class="pill" data-value="25000">5,000 - 25,000</div>
+            <div class="pill" data-value="100000">25,000 - 1,00,000</div>
+            <div class="pill" data-value="500000">1 - 5 Lakhs</div>
+            <div class="pill" data-value="1000000">5 - 10 Lakhs</div>
+            <div class="pill" data-value="5000000">10+ Lakhs</div>
+          </div>
+          <div class="error-message" id="amount-error">Please select an amount range</div>
+        </div>
+
+        <div class="wizard-step" data-step="3">
+          <h2>3. Do you have collateral?</h2>
+          <div class="pill-container" id="collateral">
+            <div class="pill" data-value="yes">Yes</div>
+            <div class="pill" data-value="no">No</div>
+            <div class="pill" data-value="partial">Partial</div>
+          </div>
+          <div class="error-message" id="collateral-error">Please select an option</div>
+        </div>
+
+        <div class="wizard-step" data-step="4">
+          <h2>4. Credit history?</h2>
+          <div class="pill-container" id="credit">
+            <div class="pill" data-value="excellent">Excellent (750+)</div>
+            <div class="pill" data-value="good">Good (700-749)</div>
+            <div class="pill" data-value="fair">Fair (650-699)</div>
+            <div class="pill" data-value="poor">Poor (600-649)</div>
+            <div class="pill" data-value="none">No Credit History</div>
+          </div>
+          <div class="error-message" id="credit-error">Please select your credit history</div>
+        </div>
+
+        <div class="wizard-step" data-step="5">
+          <h2>5. Income source?</h2>
+          <div class="pill-container" id="income">
+            <div class="pill" data-value="salaried">Salaried</div>
+            <div class="pill" data-value="self-employed">Self-employed</div>
+            <div class="pill" data-value="business">Business Owner</div>
+            <div class="pill" data-value="freelance">Freelancer</div>
+            <div class="pill" data-value="student">Student</div>
+            <div class="pill" data-value="retired">Retired</div>
+            <div class="pill" data-value="unemployed">Unemployed</div>
+          </div>
+          <div class="error-message" id="income-error">Please select your income source</div>
+        </div>
+
+        <div class="wizard-step" data-step="6">
+          <h2>6. Monthly income? (₹)</h2>
+          <div class="pill-container" id="incomeAmount">
+            <div class="pill" data-value="0">No Income</div>
+            <div class="pill" data-value="15000">Under 15,000</div>
+            <div class="pill" data-value="30000">15,000 - 30,000</div>
+            <div class="pill" data-value="50000">30,000 - 50,000</div>
+            <div class="pill" data-value="100000">50,000 - 1,00,000</div>
+            <div class="pill" data-value="200000">1,00,000+</div>
+          </div>
+          <div class="error-message" id="incomeAmount-error">Please select your income range</div>
+        </div>
+
+        <div class="wizard-step" data-step="7">
+          <h2>7. Employment stability?</h2>
+          <div class="pill-container" id="employment">
+            <div class="pill" data-value="stable">Stable (2+ years)</div>
+            <div class="pill" data-value="moderate">Moderate (1-2 years)</div>
+            <div class="pill" data-value="new">New Job (<1 year)</div>
+            <div class="pill" data-value="variable">Variable Income</div>
+          </div>
+          <div class="error-message" id="employment-error">Please select your employment stability</div>
+        </div>
+
+        <div class="wizard-step" data-step="8">
+          <h2>8. Existing debts?</h2>
+          <div class="pill-container" id="debts">
+            <div class="pill" data-value="none">No Debts</div>
+            <div class="pill" data-value="low">Low (EMI < 30% income)</div>
+            <div class="pill" data-value="medium">Medium (EMI 30-50% income)</div>
+            <div class="pill" data-value="high">High (EMI > 50% income)</div>
+          </div>
+          <div class="error-message" id="debts-error">Please select your debt level</div>
+        </div>
+
+        <div class="wizard-step" data-step="9">
+          <h2>9. How quickly do you need funds?</h2>
+          <div class="pill-container" id="urgency">
+            <div class="pill" data-value="immediate">Within 24 hours</div>
+            <div class="pill" data-value="quick">Within a week</div>
+            <div class="pill" data-value="moderate">Within a month</div>
+            <div class="pill" data-value="planned">Planned (1+ month)</div>
+          </div>
+          <div class="error-message" id="urgency-error">Please select the urgency</div>
+        </div>
+
+        <div class="wizard-step" data-step="10">
+          <h2>10. Support from family/friends?</h2>
+          <div class="pill-container" id="support">
+            <div class="pill" data-value="yes">Yes</div>
+            <div class="pill" data-value="no">No</div>
+            <div class="pill" data-value="maybe">Maybe</div>
+          </div>
+          <div class="error-message" id="support-error">Please select an option</div>
+        </div>
+
+        <div class="wizard-nav">
+          <button id="prev-btn" style="display: none;" onclick="navigateWizard(-1)">Previous</button>
+          <button id="next-btn" onclick="navigateWizard(1)">Next</button>
+          <button id="submit-btn" style="display: none;" onclick="calculateRecommendation()">Get Recommendation</button>
+        </div>
+        
+        <div class="result" id="result" style="display: none;">
+          <h3>Best Option For You</h3>
+          <div id="recommendation"></div>
+          <p><strong>Why this option:</strong> <span id="reasoning"></span></p>
+          <div id="alternative-options" style="margin-top: 20px;"></div>
+          <div style="margin-top: 20px;">
+            <button onclick="printRecommendation()" class="print-button">Print Recommendation</button>
+            <button onclick="saveRecommendation()" class="save-button">Save Results</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="calculator">
+      <div class="section">
+        <h1>📊 EMI Calculator</h1>
+        <div class="input-group">
+          <input type="number" id="loanAmount" placeholder="Loan Amount (₹)" min="0" />
+          <input type="number" id="interestRate" placeholder="Interest Rate (%)" step="0.1" min="0" />
+          <input type="number" id="loanTenure" placeholder="Tenure (months)" min="1" />
+        </div>
+        <button onclick="calculateEMI()">Calculate EMI</button>
+        
+        <div class="emi-result" id="emiResult" style="display: none;">
+          <h3>Loan Breakdown</h3>
+          <p><strong>Monthly EMI:</strong> ₹<span id="emi-value"></span></p>
+          <p><strong>Total Interest:</strong> ₹<span id="total-interest"></span></p>
+          <p><strong>Total Payment:</strong> ₹<span id="total-payment"></span></p>
+          <div style="margin-top: 20px; height: 300px;">
+            <canvas id="emiChart"></canvas>
+          </div>
+          <div style="margin-top: 20px;">
+            <button onclick="printEMI()" class="print-button">Print Calculation</button>
+            <button onclick="saveEMI()" class="save-button">Save Calculation</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="comparison">
+      <div class="section">
+        <h1>🔍 Loan Comparison</h1>
+        <p>Compare different loan options side by side</p>
+        <div class="input-group">
+          <input type="number" id="compareAmount" placeholder="Loan Amount (₹)" min="0" />
+          <input type="number" id="compareTenure" placeholder="Tenure (months)" min="1" />
+        </div>
+        <button onclick="compareLoans()">Compare Loans</button>
+        
+        <div id="comparison-result" style="margin-top: 20px;"></div>
+        <div style="margin-top: 20px; display: none;" id="comparison-buttons">
+          <button onclick="printComparison()" class="print-button">Print Comparison</button>
+          <button onclick="saveComparison()" class="save-button">Save Comparison</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="resources">
+      <div class="section">
+        <h1>📚 Financial Resources</h1>
+        <div style="text-align: left;">
+          <h3>Types of Loans</h3>
+          <ul style="margin-left: 20px; margin-bottom: 20px;">
+            <li><strong>Personal Loan</strong> - Unsecured loan for various purposes</li>
+            <li><strong>Home Loan</strong> - For purchasing or constructing a house</li>
+            <li><strong>Car Loan</strong> - Specifically for vehicle purchase</li>
+            <li><strong>Education Loan</strong> - For funding education expenses</li>
+            <li><strong>Gold Loan</strong> - Secured loan against gold ornaments</li>
+            <li><strong>Business Loan</strong> - For business expansion or working capital</li>
+          </ul>
+          
+          <h3>Tips for Better Loan Approval</h3>
+          <ul style="margin-left: 20px; margin-bottom: 20px;">
+            <li>Maintain a good credit score (750+)</li>
+            <li>Keep your debt-to-income ratio below 40%</li>
+            <li>Provide accurate documentation</li>
+            <li>Consider adding a co-applicant with good credit</li>
+            <li>Compare offers from multiple lenders</li>
+          </ul>
+          
+          <h3>Financial Glossary</h3>
+          <ul style="margin-left: 20px; margin-bottom: 20px;">
+            <li><strong>EMI</strong> - Equated Monthly Installment: Fixed payment amount made by a borrower to a lender at a specified date each calendar month</li>
+            <li><strong>APR</strong> - Annual Percentage Rate: The annual rate charged for borrowing or earned through an investment</li>
+            <li><strong>Collateral</strong> - An asset that a borrower offers as a way for a lender to secure the loan</li>
+            <li><strong>Credit Score</strong> - A number between 300-850 that depicts a consumer's creditworthiness</li>
+          </ul>
+          
+          <h3>External Resources</h3>
+          <ul style="margin-left: 20px;">
+            <li><a href="https://www.rbi.org.in/" target="_blank">Reserve Bank of India</a> - Central banking institution</li>
+            <li><a href="https://www.consumerfinance.gov/" target="_blank">Consumer Financial Protection Bureau</a> - U.S. government agency for consumer protection</li>
+            <li><a href="https://www.investopedia.com/" target="_blank">Investopedia</a> - Financial education website</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="offline-status" id="offlineStatus">You are currently offline</div>
+    <div class="notification" id="notification">Settings saved successfully!</div>
+    
+    <footer>
+      <p>Smart Money Guide & EMI Calculator | Works offline | Last updated: September 2023</p>
+    </footer>
+  </div>
+
+  <canvas id="confetti"></canvas>
+
+  <script>
+    // Service Worker Registration for offline functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+      });
+    }
+
+    // Offline status detection
+    window.addEventListener('online', function() {
+      document.getElementById('offlineStatus').classList.remove('offline');
+    });
+
+    window.addEventListener('offline', function() {
+      document.getElementById('offlineStatus').classList.add('offline');
+    });
+
+    // Check initial status
+    if (!navigator.onLine) {
+      document.getElementById('offlineStatus').classList.add('offline');
+    }
+
+    // Tab functionality
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Wizard navigation
+    let currentStep = 1;
+    const totalSteps = 10;
+
+    function navigateWizard(direction) {
+      // Validate current step
+      if (direction > 0 && !validateStep(currentStep)) {
+        return;
+      }
+
+      // Hide current step
+      document.querySelector(`.wizard-step[data-step="${currentStep}"]`).classList.remove('active');
+      
+      // Update current step
+      currentStep += direction;
+      
+      // Show new step
+      document.querySelector(`.wizard-step[data-step="${currentStep}"]`).classList.add('active');
+      
+      // Update navigation buttons
+      document.getElementById('prev-btn').style.display = currentStep > 1 ? 'inline-block' : 'none';
+      document.getElementById('next-btn').style.display = currentStep < totalSteps ? 'inline-block' : 'none';
+      document.getElementById('submit-btn').style.display = currentStep === totalSteps ? 'inline-block' : 'none';
+      
+      // Update progress
+      updateProgress();
+      
+      // Scroll to top of section
+      document.querySelector('.wizard-step.active').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function validateStep(step) {
+      const stepContainers = [
+        'purpose', 'amount', 'collateral', 'credit', 'income', 
+        'incomeAmount', 'employment', 'debts', 'urgency', 'support'
+      ];
+      
+      const containerId = stepContainers[step - 1];
+      const selected = document.querySelector(`#${containerId} .pill.selected`);
+      const errorElement = document.getElementById(`${containerId}-error`);
+      
+      if (!selected) {
+        errorElement.style.display = 'block';
+        return false;
+      }
+      
+      errorElement.style.display = 'none';
+      return true;
+    }
+
+    // Pill button toggle with single selection per group
+    document.querySelectorAll('.pill-container').forEach(container => {
+      const pills = container.querySelectorAll('.pill');
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          // For single selection groups
+          pills.forEach(p => p.classList.remove('selected'));
+          pill.classList.add('selected');
+          updateProgress();
+          saveFormData();
+        });
+      });
+    });
+
+    // Update progress bar
+    function updateProgress() {
+      const totalQuestions = document.querySelectorAll('.pill-container').length;
+      let answeredQuestions = 0;
+      
+      document.querySelectorAll('.pill-container').forEach(container => {
+        if (container.querySelector('.pill.selected')) {
+          answeredQuestions++;
+        }
+      });
+      
+      const progress = (answeredQuestions / totalQuestions) * 100;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+      document.getElementById('progressText').textContent = `${Math.round(progress)}% Complete`;
+    }
+
+    // Enhanced recommendation algorithm
+    function calculateRecommendation() {
+      // Validate all steps
+      for (let i = 1; i <= totalSteps; i++) {
+        if (!validateStep(i)) {
+          showNotification('Please complete all questions before getting a recommendation.', true);
+          navigateWizard(1 - i); // Navigate to first incomplete step
+          return;
+        }
+      }
+      
+      const answers = {
+        purpose: getSelectedValue('purpose'),
+        amount: getSelectedValue('amount'),
+        collateral: getSelectedValue('collateral'),
+        credit: getSelectedValue('credit'),
+        income: getSelectedValue('income'),
+        incomeAmount: getSelectedValue('incomeAmount'),
+        employment: getSelectedValue('employment'),
+        debts: getSelectedValue('debts'),
+        urgency: getSelectedValue('urgency'),
+        support: getSelectedValue('support')
+      };
+      
+      // Scoring system for loan recommendations
+      let scores = {
+        personalLoan: 0,
+        homeLoan: 0,
+        carLoan: 0,
+        educationLoan: 0,
+        goldLoan: 0,
+        businessLoan: 0,
+        peerToPeer: 0,
+        familyFriends: 0,
+        microfinance: 0
+      };
+      
+      // Purpose scoring
+      switch(answers.purpose) {
+        case 'emergency':
+          scores.personalLoan += 8;
+          scores.goldLoan += 6;
+          scores.peerToPeer += 5;
+          scores.familyFriends += 7;
+          break;
+        case 'education':
+          scores.educationLoan += 10;
+          scores.personalLoan += 5;
+          break;
+        case 'business':
+          scores.businessLoan += 10;
+          scores.personalLoan += 6;
+          break;
+        case 'home':
+          scores.homeLoan += 10;
+          break;
+        case 'vehicle':
+          scores.carLoan += 10;
+          scores.personalLoan += 5;
+          break;
+        case 'debt':
+          scores.personalLoan += 8;
+          scores.goldLoan += 6;
+          break;
+        case 'wedding':
+          scores.personalLoan += 8;
+          scores.goldLoan += 6;
+          break;
+        case 'travel':
+          scores.personalLoan += 8;
+          break;
+        case 'medical':
+          scores.personalLoan += 8;
+          scores.goldLoan += 7;
+          scores.peerToPeer += 5;
+          break;
+        case 'other':
+          scores.personalLoan += 7;
+          break;
+      }
+      
+      // Amount scoring
+      const amount = parseInt(answers.amount);
+      if (amount <= 25000) {
+        scores.personalLoan += 5;
+        scores.microfinance += 8;
+        scores.familyFriends += 7;
+        scores.peerToPeer += 6;
+      } else if (amount <= 100000) {
+        scores.personalLoan += 7;
+        scores.goldLoan += 6;
+        scores.peerToPeer += 5;
+      } else if (amount <= 500000) {
+        scores.personalLoan += 8;
+        scores.goldLoan += 7;
+        scores.businessLoan += 6;
+      } else {
+        scores.homeLoan += 8;
+        scores.businessLoan += 7;
+        scores.carLoan += 6;
+      }
+      
+      // Collateral scoring
+      if (answers.collateral === 'yes') {
+        scores.homeLoan += 5;
+        scores.carLoan += 5;
+        scores.goldLoan += 8;
+      } else if (answers.collateral === 'partial') {
+        scores.personalLoan += 3;
+        scores.goldLoan += 5;
+      } else {
+        scores.personalLoan += 5;
+        scores.peerToPeer += 4;
+        scores.microfinance += 3;
+      }
+      
+      // Credit scoring
+      switch(answers.credit) {
+        case 'excellent':
+          scores.personalLoan += 8;
+          scores.homeLoan += 7;
+          scores.carLoan += 7;
+          break;
+        case 'good':
+          scores.personalLoan += 7;
+          scores.homeLoan += 6;
+          scores.carLoan += 6;
+          break;
+        case 'fair':
+          scores.personalLoan += 5;
+          scores.goldLoan += 6;
+          scores.peerToPeer += 4;
+          break;
+        case 'poor':
+          scores.goldLoan += 7;
+          scores.microfinance += 5;
+          scores.familyFriends += 8;
+          break;
+        case 'none':
+          scores.goldLoan += 6;
+          scores.microfinance += 5;
+          scores.familyFriends += 7;
+          break;
+      }
+      
+      // Income source scoring
+      switch(answers.income) {
+        case 'salaried':
+          scores.personalLoan += 7;
+          scores.homeLoan += 6;
+          scores.carLoan += 6;
+          break;
+        case 'self-employed':
+        case 'business':
+          scores.businessLoan += 8;
+          scores.personalLoan += 6;
+          break;
+        case 'freelance':
+          scores.personalLoan += 5;
+          scores.peerToPeer += 6;
+          break;
+        case 'student':
+          scores.educationLoan += 8;
+          scores.familyFriends += 7;
+          break;
+        case 'retired':
+          scores.personalLoan += 4;
+          scores.goldLoan += 7;
+          break;
+        case 'unemployed':
+          scores.familyFriends += 8;
+          scores.goldLoan += 6;
+          break;
+      }
+      
+      // Income amount scoring
+      const incomeAmount = parseInt(answers.incomeAmount);
+      if (incomeAmount >= 50000) {
+        scores.personalLoan += 7;
+        scores.homeLoan += 7;
+        scores.carLoan += 7;
+      } else if (incomeAmount >= 30000) {
+        scores.personalLoan += 6;
+        scores.homeLoan += 5;
+        scores.carLoan += 5;
+      } else if (incomeAmount >= 15000) {
+        scores.personalLoan += 5;
+        scores.goldLoan += 4;
+      } else {
+        scores.microfinance += 6;
+        scores.familyFriends += 7;
+      }
+      
+      // Find the best option
+      let bestOption = '';
+      let bestScore = 0;
+      
+      for (const [option, score] of Object.entries(scores)) {
+        if (score > bestScore) {
+          bestScore = score;
+          bestOption = option;
+        }
+      }
+      
+      // Generate recommendation text
+      const recommendationText = generateRecommendationText(bestOption, answers);
+      const reasoningText = generateReasoningText(bestOption, answers);
+      
+      // Show result
+      document.getElementById('recommendation').innerHTML = recommendationText;
+      document.getElementById('reasoning').textContent = reasoningText;
+      
+      // Generate alternative options
+      generateAlternativeOptions(scores, bestOption, answers);
+      
+      // Show result section
+      document.getElementById('result').style.display = 'block';
+      
+      // Scroll to result
+      document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+      
+      // Trigger confetti
+      triggerConfetti();
+      
+      // Save results
+      saveResults(bestOption, recommendationText, reasoningText);
+    }
+
+    function getSelectedValue(containerId) {
+      const selected = document.querySelector(`#${containerId} .pill.selected`);
+      return selected ? selected.dataset.value : null;
+    }
+
+    function generateRecommendationText(option, answers) {
+      const amount = parseInt(answers.amount);
+      const formattedAmount = formatCurrency(amount);
+      
+      switch(option) {
+        case 'personalLoan':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Personal Loan</div>
+                  <p>Based on your profile, a personal loan of up to ${formattedAmount} would be the best option for your ${answers.purpose} needs.</p>`;
+        case 'homeLoan':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Home Loan</div>
+                  <p>A home loan would be suitable for your housing needs with favorable terms based on your financial profile.</p>`;
+        case 'carLoan':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Car Loan</div>
+                  <p>For your vehicle purchase, a specialized car loan would offer the best terms and interest rates.</p>`;
+        case 'educationLoan':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Education Loan</div>
+                  <p>An education loan is recommended for your studies, offering favorable repayment terms that begin after your education is complete.</p>`;
+        case 'goldLoan':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Gold Loan</div>
+                  <p>Based on your situation, a gold loan would provide quick access to funds at competitive interest rates.</p>`;
+        case 'businessLoan':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Business Loan</div>
+                  <p>A business loan would best serve your entrepreneurial needs with tailored repayment options.</p>`;
+        case 'peerToPeer':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Peer-to-Peer Lending</div>
+                  <p>Peer-to-peer lending platforms could provide you with the funds you need through individual investors.</p>`;
+        case 'familyFriends':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Family & Friends</div>
+                  <p>Based on your situation, borrowing from family or friends might be the most flexible and cost-effective option.</p>`;
+        case 'microfinance':
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Microfinance Institution</div>
+                  <p>A microfinance institution could provide you with a smaller loan with more flexible requirements.</p>`;
+        default:
+          return `<div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 10px;">Personal Loan</div>
+                  <p>Based on your profile, a personal loan would be the most suitable option for your needs.</p>`;
+      }
+    }
+
+    function generateReasoningText(option, answers) {
+      switch(option) {
+        case 'personalLoan':
+          return "Personal loans are unsecured and can be used for various purposes. They typically have faster approval times and flexible terms, making them suitable for your situation.";
+        case 'homeLoan':
+          return "Home loans offer longer repayment tenures and lower interest rates compared to other loan types, making them ideal for housing needs.";
+        case 'carLoan':
+          return "Car loans are specifically designed for vehicle purchases and often come with competitive interest rates and specialized terms for auto financing.";
+        case 'educationLoan':
+          return "Education loans have moratorium periods where you don't need to make payments until after completing your education, and they often have lower interest rates for students.";
+        case 'goldLoan':
+          return "Gold loans are secured loans that typically have lower interest rates and faster processing times since they're backed by your gold assets.";
+        case 'businessLoan':
+          return "Business loans are tailored for entrepreneurs and business owners, offering flexible repayment options that align with business cash flows.";
+        case 'peerToPeer':
+          return "Peer-to-peer lending can be more flexible than traditional banks, especially for borrowers with non-traditional income sources or credit histories.";
+        case 'familyFriends':
+          return "Borrowing from people you know often comes with little to no interest and more flexible repayment terms, though it's important to formalize the agreement.";
+        case 'microfinance':
+          return "Microfinance institutions specialize in smaller loans for individuals who may not qualify for traditional bank loans, offering more personalized service.";
+        default:
+          return "This option best matches your financial profile and needs based on the information you provided.";
+      }
+    }
+
+    function generateAlternativeOptions(scores, bestOption, answers) {
+      // Create a sorted list of options by score
+      const sortedOptions = Object.entries(scores)
+        .sort((a, b) => b[1] - a[1])
+        .filter(([option]) => option !== bestOption)
+        .slice(0, 2); // Get top 2 alternatives
+      
+      if (sortedOptions.length === 0) {
+        document.getElementById('alternative-options').innerHTML = '';
+        return;
+      }
+      
+      let alternativesHTML = '<h4 style="margin-top: 20px;">Alternative Options:</h4><ul style="text-align: left; margin-left: 20px;">';
+      
+      sortedOptions.forEach(([option, score]) => {
+        alternativesHTML += `<li><strong>${formatOptionName(option)}</strong> - ${generateAlternativeReasoning(option, answers)}</li>`;
+      });
+      
+      alternativesHTML += '</ul>';
+      
+      document.getElementById('alternative-options').innerHTML = alternativesHTML;
+    }
+
+    function formatOptionName(option) {
+      return option
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, str => str.toUpperCase())
+        .replace('Peer To Peer', 'Peer-to-Peer')
+        .replace('Family Friends', 'Family & Friends');
+    }
+
+    function generateAlternativeReasoning(option, answers) {
+      switch(option) {
+        case 'personalLoan':
+          return "Could provide the flexibility you need with reasonable terms.";
+        case 'homeLoan':
+          return "Might be suitable if you're considering property investment.";
+        case 'carLoan':
+          return "Could offer specialized terms if you're specifically looking for a vehicle.";
+        case 'educationLoan':
+          return "Might be worth considering if your needs are primarily education-related.";
+        case 'goldLoan':
+          return "Could offer lower interest rates if you have gold assets.";
+        case 'businessLoan':
+          return "Might be appropriate if you have business-related financial needs.";
+        case 'peerToPeer':
+          return "Could provide more flexible approval criteria than traditional lenders.";
+        case 'familyFriends':
+          return "Might be a low-cost option if you have understanding relatives or friends.";
+        case 'microfinance':
+          return "Could be more accessible if you need a smaller amount with flexible terms.";
+        default:
+          return "Could be a viable alternative based on your profile.";
+      }
+    }
+
+    function formatCurrency(amount) {
+      if (amount >= 10000000) {
+        return '₹' + (amount / 10000000).toFixed(1) + ' Cr';
+      } else if (amount >= 100000) {
+        return '₹' + (amount / 100000).toFixed(1) + ' L';
+      } else if (amount >= 1000) {
+        return '₹' + (amount / 1000).toFixed(1) + ' K';
+      } else {
+        return '₹' + amount;
+      }
+    }
+
+    // EMI Calculator
+    function calculateEMI() {
+      const principal = parseFloat(document.getElementById('loanAmount').value);
+      const interestRate = parseFloat(document.getElementById('interestRate').value);
+      const tenure = parseInt(document.getElementById('loanTenure').value);
+      
+      if (!principal || !interestRate || !tenure) {
+        showNotification('Please fill in all fields with valid numbers.', true);
+        return;
+      }
+      
+      const monthlyInterest = interestRate / 12 / 100;
+      const emi = principal * monthlyInterest * Math.pow(1 + monthlyInterest, tenure) / (Math.pow(1 + monthlyInterest, tenure) - 1);
+      const totalPayment = emi * tenure;
+      const totalInterest = totalPayment - principal;
+      
+      document.getElementById('emi-value').textContent = emi.toFixed(2);
+      document.getElementById('total-interest').textContent = totalInterest.toFixed(2);
+      document.getElementById('total-payment').textContent = totalPayment.toFixed(2);
+      
+      // Create EMI chart
+      createEMIChart(principal, totalInterest);
+      
+      // Show result
+      document.getElementById('emiResult').style.display = 'block';
+      
+      // Save calculation
+      saveEMICalculation(principal, interestRate, tenure, emi, totalInterest, totalPayment);
+    }
+
+    function createEMIChart(principal, totalInterest) {
+      const ctx = document.getElementById('emiChart').getContext('2d');
+      
+      // Destroy previous chart if it exists
+      if (window.emiChartInstance) {
+        window.emiChartInstance.destroy();
+      }
+      
+      window.emiChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Principal Amount', 'Total Interest'],
+          datasets: [{
+            data: [principal, totalInterest],
+            backgroundColor: [
+              'rgba(67, 97, 238, 0.8)',
+              'rgba(247, 37, 133, 0.8)'
+            ],
+            borderColor: [
+              'rgba(67, 97, 238, 1)',
+              'rgba(247, 37, 133, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  label += '₹' + context.raw.toFixed(2);
+                  return label;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Loan Comparison
+    function compareLoans() {
+      const amount = parseFloat(document.getElementById('compareAmount').value);
+      const tenure = parseInt(document.getElementById('compareTenure').value);
+      
+      if (!amount || !tenure) {
+        showNotification('Please enter both loan amount and tenure.', true);
+        return;
+      }
+      
+      // Define different loan types with sample interest rates
+      const loanTypes = [
+        { name: 'Personal Loan', rate: 10.5, processingFee: 2 },
+        { name: 'Home Loan', rate: 8.4, processingFee: 0.5 },
+        { name: 'Car Loan', rate: 7.9, processingFee: 1 },
+        { name: 'Education Loan', rate: 8.5, processingFee: 1.5 },
+        { name: 'Gold Loan', rate: 9.0, processingFee: 1 }
+      ];
+      
+      let comparisonHTML = `
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Loan Type</th>
+              <th>Interest Rate</th>
+              <th>Processing Fee</th>
+              <th>Monthly EMI</th>
+              <th>Total Interest</th>
+              <th>Total Payment</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      loanTypes.forEach(loan => {
+        const monthlyInterest = loan.rate / 12 / 100;
+        const emi = amount * monthlyInterest * Math.pow(1 + monthlyInterest, tenure) / (Math.pow(1 + monthlyInterest, tenure) - 1);
+        const totalPayment = emi * tenure;
+        const totalInterest = totalPayment - amount;
+        const processingFeeAmount = (loan.processingFee / 100) * amount;
+        
+        comparisonHTML += `
+          <tr>
+            <td>${loan.name}</td>
+            <td>${loan.rate}%</td>
+            <td>₹${processingFeeAmount.toFixed(2)} (${loan.processingFee}%)</td>
+            <td>₹${emi.toFixed(2)}</td>
+            <td>₹${totalInterest.toFixed(2)}</td>
+            <td>₹${totalPayment.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+      
+      comparisonHTML += `</tbody></table>`;
+      
+      document.getElementById('comparison-result').innerHTML = comparisonHTML;
+      document.getElementById('comparison-buttons').style.display = 'block';
+      
+      // Save comparison
+      saveComparisonData(amount, tenure, loanTypes);
+    }
+
+    // Confetti effect
+    function triggerConfetti() {
+      const confettiSettings = { target: 'confetti', max: 150, size: 1.5, animate: true, props: ['circle', 'square', 'triangle', 'line'] };
+      const confetti = new ConfettiGenerator(confettiSettings);
+      confetti.render();
+      
+      setTimeout(() => {
+        confetti.clear();
+      }, 3000);
+    }
+
+    // Save and load form data
+    function saveFormData() {
+      const formData = {};
+      
+      document.querySelectorAll('.pill-container').forEach(container => {
+        const id = container.id;
+        const selected = container.querySelector('.pill.selected');
+        formData[id] = selected ? selected.dataset.value : null;
+      });
+      
+      localStorage.setItem('moneyGuideFormData', JSON.stringify(formData));
+    }
+
+    function loadFormData() {
+      const savedData = localStorage.getItem('moneyGuideFormData');
+      if (savedData) {
+        const formData = JSON.parse(savedData);
+        
+        for (const [id, value] of Object.entries(formData)) {
+          if (value) {
+            const pill = document.querySelector(`#${id} .pill[data-value="${value}"]`);
+            if (pill) {
+              pill.classList.add('selected');
+            }
+          }
+        }
+        
+        updateProgress();
+      }
+    }
+
+    function saveResults(option, recommendation, reasoning) {
+      const results = {
+        option,
+        recommendation,
+        reasoning,
+        timestamp: new Date().toISOString()
+      };
+      
+      localStorage.setItem('moneyGuideResults', JSON.stringify(results));
+    }
+
+    function saveEMICalculation(principal, rate, tenure, emi, interest, total) {
+      const calculation = {
+        principal,
+        rate,
+        tenure,
+        emi,
+        interest,
+        total,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Save to localStorage
+      let history = JSON.parse(localStorage.getItem('emiHistory') || '[]');
+      history.push(calculation);
+      localStorage.setItem('emiHistory', JSON.stringify(history));
+    }
+
+    function saveComparisonData(amount, tenure, loans) {
+      const comparison = {
+        amount,
+        tenure,
+        loans,
+        timestamp: new Date().toISOString()
+      };
+      
+      localStorage.setItem('loanComparison', JSON.stringify(comparison));
+    }
+
+    // Print functions
+    function printRecommendation() {
+      const printContent = document.getElementById('result').innerHTML;
+      const originalContent = document.body.innerHTML;
+      
+      document.body.innerHTML = `
+        <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+          <h1 style="text-align: center; margin-bottom: 20px;">Smart Money Guide Recommendation</h1>
+          ${printContent}
+          <div style="margin-top: 30px; text-align: center; font-size: 14px; color: #666;">
+            Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
+          </div>
+        </div>
+      `;
+      
+      window.print();
+      document.body.innerHTML = originalContent;
+      location.reload();
+    }
+
+    function printEMI() {
+      const printContent = document.getElementById('emiResult').innerHTML;
+      const originalContent = document.body.innerHTML;
+      
+      document.body.innerHTML = `
+        <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+          <h1 style="text-align: center; margin-bottom: 20px;">EMI Calculation Result</h1>
+          ${printContent}
+          <div style="margin-top: 30px; text-align: center; font-size: 14px; color: #666;">
+            Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
+          </div>
+        </div>
+      `;
+      
+      window.print();
+      document.body.innerHTML = originalContent;
+      location.reload();
+    }
+
+    function printComparison() {
+      const printContent = document.getElementById('comparison-result').innerHTML;
+      const originalContent = document.body.innerHTML;
+      
+      document.body.innerHTML = `
+        <div style="padding: 20px; max-width: 1000px; margin: 0 auto;">
+          <h1 style="text-align: center; margin-bottom: 20px;">Loan Comparison</h1>
+          ${printContent}
+          <div style="margin-top: 30px; text-align: center; font-size: 14px; color: #666;">
+            Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
+          </div>
+        </div>
+      `;
+      
+      window.print();
+      document.body.innerHTML = originalContent;
+      location.reload();
+    }
+
+    // Save functions
+    function saveRecommendation() {
+      showNotification('Recommendation saved successfully!');
+      // In a real app, this would save to a database or more persistent storage
+    }
+
+    function saveEMI() {
+      showNotification('EMI calculation saved successfully!');
+      // In a real app, this would save to a database or more persistent storage
+    }
+
+    function saveComparison() {
+      showNotification('Comparison saved successfully!');
+      // In a real app, this would save to a database or more persistent storage
+    }
+
+    // Notification system
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = isError ? 'notification error' : 'notification';
+      notification.style.display = 'block';
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+
+    // Initialize the application
+    window.addEventListener('DOMContentLoaded', () => {
+      loadFormData();
+      
+      // Add input validation
+      document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', function() {
+          if (this.value < 0) this.value = 0;
+        });
+      });
+    });
+
+    // ConfettiGenerator class (simplified version)
+    class ConfettiGenerator {
+      constructor(settings) {
+        this.settings = settings;
+        this.canvas = document.getElementById(settings.target);
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.animation = null;
+        
+        // Set canvas size
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        
+        // Create particles
+        for (let i = 0; i < settings.max; i++) {
+          this.particles.push(this.createParticle());
+        }
+      }
+      
+      createParticle() {
+        const { props, size } = this.settings;
+        const prop = props[Math.floor(Math.random() * props.length)];
+        
+        return {
+          x: Math.random() * this.canvas.width,
+          y: -Math.random() * this.canvas.height,
+          size: Math.random() * 3 + (size || 1),
+          speed: Math.random() * 5 + 1,
+          rotation: Math.random() * 360,
+          rotationSpeed: Math.random() * 10 - 5,
+          prop,
+          color: `hsl(${Math.random() * 360}, 80%, 60%)`
+        };
+      }
+      
+      render() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        for (let i = 0; i < this.particles.length; i++) {
+          const p = this.particles[i];
+          
+          // Update position
+          p.y += p.speed;
+          p.rotation += p.rotationSpeed;
+          
+          // Reset if out of screen
+          if (p.y > this.canvas.height) {
+            this.particles[i] = this.createParticle();
+            continue;
+          }
+          
+          // Draw the particle
+          this.ctx.save();
+          this.ctx.translate(p.x, p.y);
+          this.ctx.rotate(p.rotation * Math.PI / 180);
+          this.ctx.fillStyle = p.color;
+          
+          switch (p.prop) {
+            case 'circle':
+              this.ctx.beginPath();
+              this.ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+              this.ctx.fill();
+              break;
+            case 'square':
+              this.ctx.fillRect(-p.size, -p.size, p.size * 2, p.size * 2);
+              break;
+            case 'triangle':
+              this.ctx.beginPath();
+              this.ctx.moveTo(0, -p.size);
+              this.ctx.lineTo(-p.size, p.size);
+              this.ctx.lineTo(p.size, p.size);
+              this.ctx.closePath();
+              this.ctx.fill();
+              break;
+            case 'line':
+              this.ctx.beginPath();
+              this.ctx.moveTo(-p.size, 0);
+              this.ctx.lineTo(p.size, 0);
+              this.ctx.lineWidth = 2;
+              this.ctx.strokeStyle = p.color;
+              this.ctx.stroke();
+              break;
+          }
+          
+          this.ctx.restore();
+        }
+        
+        if (this.settings.animate) {
+          this.animation = requestAnimationFrame(this.render.bind(this));
+        }
+      }
+      
+      clear() {
+        if (this.animation) {
+          cancelAnimationFrame(this.animation);
+        }
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+    }
+  </script>
+</body>
+</html>
